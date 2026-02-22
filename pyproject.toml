@@ -4,15 +4,15 @@ build-backend = "setuptools.backends._legacy:_Backend"
 
 [project]
 name = "lisaloop"
-version = "0.1.0"
-description = "Build poker agents that think. SDK for Lisa Loop — self-learning poker AI."
+version = "0.2.0"
+description = "The open framework for building on Lisa Loop — poker agents, equity calculators, strategy tools, and more."
 readme = "README.md"
 license = {text = "MIT"}
 requires-python = ">=3.9"
 authors = [
     {name = "Lisa Loop", email = "4augx@2200freefonts.com"},
 ]
-keywords = ["poker", "ai", "agent", "reinforcement-learning", "game-theory", "mccfr", "sdk"]
+keywords = ["poker", "ai", "agent", "reinforcement-learning", "game-theory", "mccfr", "sdk", "equity-calculator", "tournament", "texas-holdem", "icm", "hackathon"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
