@@ -359,7 +359,7 @@ lisaloop-sdk/
 ---
 
 <p align="center">
-  <img src="https://cdn.prod.website-files.com/69082c5061a39922df8ed3b6/698de9d051aaed1a235ebf79_milton.png" alt="Lisa" width="60" />
+  <img src="https://cdn.prod.website-files.com/69082c5061a39922df8ed3b6/699b43bac4d0619656d4811f_New%20Project%20-%202026-02-18T022623.000.png" alt="Lisa" width="60" />
 </p>
 
 <p align="center">
