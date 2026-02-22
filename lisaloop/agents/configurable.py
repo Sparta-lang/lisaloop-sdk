@@ -7,7 +7,7 @@ change the agent's personality.
 
 Usage:
     from lisaloop.config import Character
-    char = Character(name="Shark", aggression=0.9, tightness=0.85)
+    char = Character(name="Duffman", aggression=0.9, tightness=0.85)
     agent = char.to_agent(seed=42)
 """
 

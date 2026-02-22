@@ -16,7 +16,7 @@ Usage:
 
     # Create programmatically
     bot = Character(
-        name="SharkBot",
+        name="Duffman",
         style="tight-aggressive",
         aggression=0.8,
         bluff_frequency=0.15,

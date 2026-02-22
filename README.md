@@ -14,9 +14,9 @@
 
 <p align="center">
   <a href="#quickstart">Quickstart</a> &nbsp;·&nbsp;
-  <a href="#build-anything">Build Anything</a> &nbsp;·&nbsp;
-  <a href="#cli-tools">CLI Tools</a> &nbsp;·&nbsp;
+  <a href="#what-can-you-build">What Can You Build?</a> &nbsp;·&nbsp;
   <a href="#hackathon">Hackathon</a> &nbsp;·&nbsp;
+  <a href="#build-anything">Examples</a> &nbsp;·&nbsp;
   <a href="#api-reference">API Reference</a>
 </p>
 
@@ -157,7 +157,95 @@ result = arena.run()
 
 ---
 
-<h2 id="build-anything">Build Anything</h2>
+<h2 id="what-can-you-build">What Can You Build?</h2>
+
+**Anything you want.** Lisa Loop SDK is a full agent framework — poker is just the starting point. The plugin system, runtime, events, memory, and character files are general-purpose building blocks. Here's what people are building:
+
+<table>
+<tr>
+<td width="50%">
+
+### Poker & Gaming
+- Custom AI poker agents with unique personalities
+- Tournament engines and leaderboard platforms
+- Real-time equity calculators and range tools
+- Multi-game environments (Holdem, Heads-Up, Omaha)
+- Training arenas for self-play and pool matchups
+
+</td>
+<td width="50%">
+
+### AI Agents & Bots
+- Autonomous agents that learn and adapt over time
+- Discord/Telegram bots that run poker games in chat
+- Agent-vs-agent battle arenas with live spectating
+- Character-driven AI with JSON personality files
+- Multi-agent systems with event-driven coordination
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+### Analytics & Tools
+- Opponent profiling dashboards (auto-classify play styles)
+- Hand history replay tools with visual breakdowns
+- Session trackers with SQLite persistence
+- Coaching tools that flag mistakes and suggest lines
+- Portfolio-style performance analytics (Sharpe, drawdown)
+
+</td>
+<td width="50%">
+
+### Platforms & Infra
+- Plugin marketplaces for community extensions
+- Web apps where users build agents via JSON and compete
+- API wrappers that expose Lisa's brain as a service
+- Research platforms for strategy comparison at scale
+- Anything else — the framework is yours to extend
+
+</td>
+</tr>
+</table>
+
+> **The SDK gives you: a runtime, a plugin system, an event bus, memory, providers, environments, characters, and training loops.** What you build with it is up to you.
+
+---
+
+<h2 id="hackathon">Hackathon</h2>
+
+<p align="center">
+  <img src="https://cdn.prod.website-files.com/69082c5061a39922df8ed3b6/699b5a8dcadde7b278268c9b_ChatGPT%20Image%20Feb%2019%2C%202026%2C%2003_19_57%20AM.png" alt="Lisa Loop Hackathon" width="100%" />
+</p>
+
+### Lisa Loop Build-a-thon — 50 SOL Prize Pool
+
+**Build anything on Lisa Loop. Best project wins.**
+
+| | Details |
+|---|---|
+| **Prize** | 50 SOL |
+| **Duration** | 7 days |
+| **Start** | February 22, 2026 |
+| **End** | March 1, 2026 |
+| **How to submit** | Reply to our tweet with your site or GitHub link |
+| **Follow** | [@lisaloopbot](https://x.com/lisaloopbot) |
+
+**What counts as a submission?**
+
+Anything built on the Lisa Loop SDK — poker agents, analytics dashboards, Discord bots, training tools, new game environments, plugins, visualizations, research papers, whatever. There are no tracks or categories. **Build what excites you.**
+
+```bash
+# Get started in 30 seconds
+git clone https://github.com/LisaLoopBot/lisaloop-sdk.git
+cd lisaloop-sdk
+pip install -e .
+python -m lisaloop.examples.quickstart
+```
+
+---
+
+<h2 id="build-anything">Examples</h2>
 
 ### 1. Custom Poker Agent
 
@@ -166,8 +254,8 @@ Subclass `Agent`, implement `decide()`. That's it.
 ```python
 from lisaloop import Agent, GameState, Action
 
-class SharkBot(Agent):
-    name = "SharkBot"
+class DuffmanBot(Agent):
+    name = "DuffmanBot"
     version = "1.0"
 
     def decide(self, state: GameState) -> Action:
@@ -334,7 +422,7 @@ report = analyze_match(result)
 for name, pr in report.player_reports.items():
     print(f"{name}: {pr.style} | {pr.bb_per_100:+.1f} BB/100 | Sharpe: {pr.sharpe_ratio:.2f}")
 
-h2h = compare_agents(result, "Lisa", "SharkBot")
+h2h = compare_agents(result, "Lisa", "DuffmanBot")
 print(f"Edge: {h2h.edge_bb_per_100:+.1f} BB/100 ({h2h.confidence})")
 ```
 
@@ -445,6 +533,35 @@ Invalid actions auto-correct. Your agent can't break the game.
 | **GTOBot** | Balanced | ~22% | Mixed strategies, pot-geometric sizing, MDF |
 | **RandomBot** | Chaotic | ~50% | Random actions. If you lose to this, go home |
 
+### Character Agents
+
+Create agents from JSON personality files — no code required. Drop a `.json` in `characters/` and load it:
+
+<p align="center">
+  <img src="https://cdn.prod.website-files.com/69082c5061a39922df8ed3b6/699b43bac4d0619656d4811f_New%20Project%20-%202026-02-18T022623.000.png" alt="Lisa" width="100" />
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="https://cdn.prod.website-files.com/69082c5061a39922df8ed3b6/699b5a38da33c62d2cab8c30_duffman.png" alt="Duffman" width="100" />
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <img src="https://cdn.prod.website-files.com/69082c5061a39922df8ed3b6/699b5a3815903f7c36900d5f_apu.png" alt="Apu" width="100" />
+</p>
+
+<p align="center">
+  <strong>Lisa</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <strong>Duffman</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+  <strong>Apu</strong>
+</p>
+
+```python
+from lisaloop.config import CharacterLoader
+
+duffman = CharacterLoader.from_file("characters/duffman.json")
+apu = CharacterLoader.from_file("characters/apu.json")
+
+# Instant agents from JSON
+duffman_agent = duffman.to_agent(seed=42)
+apu_agent = apu.to_agent(seed=42)
+```
+
 ---
 
 ## Project Structure
@@ -512,8 +629,8 @@ lisaloop-sdk/
 │   └── cli.py                    # Full CLI
 ├── characters/                   # Character files (JSON agent profiles)
 │   ├── lisa.json                 # Lisa — adaptive exploitative
-│   ├── shark.json                # Tight-aggressive shark
-│   └── maniac.json               # Chaotic loose-aggressive
+│   ├── duffman.json              # Oh yeah! Tight-aggressive
+│   └── apu.json                  # Thank you, come again! LAG
 ├── tests/
 ├── CONTRIBUTING.md
 ├── pyproject.toml
@@ -521,19 +638,6 @@ lisaloop-sdk/
 ```
 
 ---
-
-<h2 id="hackathon">Hackathon Tracks</h2>
-
-| Track | Challenge | Difficulty |
-|-------|-----------|------------|
-| **Beat Lisa** | Build an agent that profits against Lisa over 10k hands | Hard |
-| **Survival Mode** | $100 API credits, last agent standing wins | Medium |
-| **Read the Table** | Best opponent modeling / profiling system | Hard |
-| **Coach Lisa** | Best post-session analysis or coaching tool | Medium |
-| **Dashboard** | Best real-time visualization or monitoring | Medium |
-| **Range Warrior** | Best preflop range construction tool | Easy |
-| **New Game** | Adapt for Omaha, Short Deck, or tournaments | Hard |
-| **Wild Card** | Surprise us | ??? |
 
 ---
 

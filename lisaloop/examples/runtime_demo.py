@@ -37,14 +37,14 @@ def main():
 
     # ── Load Agent from Character File ───────────────
     print("\n  Loading character from JSON...")
-    shark = Character(
-        name="Shark",
+    duffman = Character(
+        name="Duffman",
         style="tight-aggressive",
         aggression=0.85,
         tightness=0.85,
         bluff_frequency=0.10,
     )
-    runtime.register_agent(shark.to_agent(seed=42))
+    runtime.register_agent(duffman.to_agent(seed=42))
 
     # ── Run Tournament ───────────────────────────────
     print(f"\n  Running tournament with {len(runtime.agents)} agents...")
