@@ -28,8 +28,9 @@
 <p align="center">
   <img src="https://img.shields.io/badge/python-3.9+-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python" />
   <img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="License" />
-  <img src="https://img.shields.io/badge/v0.2-Stable-00ff88?style=flat-square" alt="Version" />
+  <img src="https://img.shields.io/badge/v0.3-Framework-00ff88?style=flat-square" alt="Version" />
   <img src="https://img.shields.io/badge/Zero_Dependencies-stdlib_only-blueviolet?style=flat-square" alt="Deps" />
+  <img src="https://img.shields.io/badge/Plugins-Extensible-ff6b6b?style=flat-square" alt="Plugins" />
 </p>
 
 ---
@@ -41,21 +42,74 @@ Lisa Loop is an autonomous poker AI. She plays real money on PokerStars, learns 
 **This SDK opens up her brain.** Everything Lisa uses — her game engine, equity calculator, opponent models, strategy tools, bet sizing, hand ranges, hand replays, and tournament infrastructure — is packaged here for you to build on.
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                        LISA LOOP SDK                            │
-├──────────┬──────────┬──────────┬───────────┬──────────┬─────────┤
-│  AGENTS  │  EQUITY  │ STRATEGY │  REPLAY   │  ARENA   │ ANALYSIS│
-│          │          │          │           │          │         │
-│ Lisa     │ Monte    │ Bet      │ Hand      │ Tourna-  │ Stats   │
-│ TAG      │ Carlo    │ Sizing   │ History   │ ment     │ Reports │
-│ LAG      │ Ranges   │ Position │ ASCII     │ Engine   │ H2H     │
-│ GTO      │ Parser   │ Charts   │ Cards     │ Leader-  │ Style   │
-│ Random   │ Multi-   │ ICM      │ Action    │ board    │ Sharpe  │
-│ Custom   │ way      │ Bubble   │ Viewer    │ Rebuys   │ Drawdown│
-├──────────┴──────────┴──────────┴───────────┴──────────┴─────────┤
-│                      CORE ENGINE                                │
-│  Cards · Deck · Hand Evaluator · Table · Game State · Actions   │
-└─────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────┐
+│                          LISA LOOP SDK                              │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  ┌─────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐            │
+│  │ PLUGINS │  │ PROVIDERS│  │ EVENTS   │  │ MEMORY   │            │
+│  │         │  │          │  │          │  │          │            │
+│  │ Loader  │  │ Equity   │  │ Pub/Sub  │  │ SQLite   │            │
+│  │ Registry│  │ Stats    │  │ Lifecycle│  │ Opponent │            │
+│  │ Deps    │  │ Custom   │  │ Wildcard │  │ Agent    │            │
+│  └────┬────┘  └────┬─────┘  └────┬─────┘  └────┬─────┘            │
+│       └─────────────┴─────────────┴─────────────┘                  │
+│                          │                                          │
+│                   ┌──────┴──────┐                                   │
+│                   │   RUNTIME   │  ← Central orchestrator           │
+│                   │ AgentRuntime│                                    │
+│                   └──────┬──────┘                                   │
+│                          │                                          │
+│  ┌──────────┬────────────┼────────────┬──────────┬─────────┐       │
+│  │  AGENTS  │  EQUITY    │  STRATEGY  │ TRAINING │ CONFIG  │       │
+│  │          │            │            │          │         │       │
+│  │ Lisa     │ Monte      │ Bet Sizing │ Self-Play│ Char    │       │
+│  │ TAG/LAG  │ Carlo      │ Position   │ Pool     │ Files   │       │
+│  │ GTO      │ Ranges     │ ICM        │ Epochs   │ JSON    │       │
+│  │ Custom   │ Multi-way  │ Bubble     │ Tracking │ Loader  │       │
+│  │ Config   │            │            │          │         │       │
+│  ├──────────┼────────────┼────────────┼──────────┼─────────┤       │
+│  │  REPLAY  │  ARENA     │ ANALYSIS   │   ENVIRONMENTS     │       │
+│  │          │            │            │                     │       │
+│  │ ASCII    │ Tournament │ Stats/H2H  │ Hold'em  Heads-Up  │       │
+│  │ Cards    │ Leaderboard│ Sharpe     │ Custom   Multi-Game│       │
+│  └──────────┴────────────┴────────────┴─────────────────────┘       │
+│                                                                     │
+│  ┌──────────────────────────────────────────────────────────┐       │
+│  │                     CORE ENGINE                          │       │
+│  │  Cards · Deck · Hand Evaluator · Table · State · Actions │       │
+│  └──────────────────────────────────────────────────────────┘       │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Framework Architecture
+
+Lisa Loop SDK is a **full agent framework**, not just a library. Like ElizaOS but for poker:
+
+| Layer | What It Does |
+|-------|-------------|
+| **Runtime** | Central orchestrator — manages agents, plugins, events, memory, providers |
+| **Plugins** | Hot-loadable extensions with dependency resolution and lifecycle hooks |
+| **Events** | Pub/sub event bus for framework-wide communication (hand events, tournament events, training events) |
+| **Providers** | Injectable context providers (equity, stats, custom data) |
+| **Memory** | SQLite-backed persistence — hand histories, opponent databases, agent state |
+| **Characters** | JSON personality files that define agent behavior without code (like ElizaOS character files) |
+| **Environments** | Pluggable game formats — Hold'em, Heads-Up, custom variants |
+| **Training** | Self-play and pool training with epoch tracking |
+
+```python
+from lisaloop.runtime import AgentRuntime, RuntimeConfig
+
+# One object to rule them all
+runtime = AgentRuntime(RuntimeConfig(name="my-session", seed=42))
+
+runtime.load_plugin(MyPlugin())           # Extend the framework
+runtime.register_agent(LisaAgent())       # Add agents
+runtime.events.on("hand.complete", log)   # Subscribe to events
+runtime.register_provider("equity", eq)   # Inject context
+
+result = runtime.run_arena(hands=10000)   # Run tournaments
+runtime.start() / runtime.stop()          # Or manage lifecycle manually
 ```
 
 ---
@@ -398,12 +452,36 @@ Invalid actions auto-correct. Your agent can't break the game.
 ```
 lisaloop-sdk/
 ├── lisaloop/
+│   ├── runtime/                  # Framework core
+│   │   └── core.py               # AgentRuntime — central orchestrator
+│   ├── plugins/                  # Plugin system
+│   │   ├── base.py               # Plugin base class & types
+│   │   ├── registry.py           # Plugin registry & dependency resolution
+│   │   └── loader.py             # File/directory/package plugin loader
+│   ├── events/                   # Event system
+│   │   └── bus.py                # Pub/sub event bus with wildcards
+│   ├── config/                   # Configuration
+│   │   └── character.py          # Character file system (JSON agent profiles)
+│   ├── memory/                   # Persistence layer
+│   │   ├── store.py              # SQLite memory store (KV, hands, state, facts)
+│   │   └── opponent_db.py        # Persistent opponent tracking database
+│   ├── providers/                # Context providers
+│   │   ├── base.py               # Provider base class
+│   │   ├── equity_provider.py    # Real-time equity injection
+│   │   └── stats_provider.py     # Session stats provider
+│   ├── environments/             # Game environments
+│   │   ├── base.py               # GameEnvironment abstract class
+│   │   ├── holdem.py             # Texas Hold'em 6-max
+│   │   └── headsup.py            # Heads-up environment
+│   ├── training/                 # Training system
+│   │   └── self_play.py          # Self-play & pool training loops
 │   ├── core/                     # Game engine
 │   │   ├── cards.py              # Card, Hand, Deck, HandEvaluator
 │   │   ├── state.py              # GameState, Action, PlayerState
 │   │   └── table.py              # Full poker table simulation
 │   ├── agents/                   # AI agents
 │   │   ├── base.py               # Agent base class — subclass this
+│   │   ├── configurable.py       # Character-driven agent
 │   │   ├── lisa_agent.py         # Lisa — adaptive exploitative
 │   │   ├── tag_agent.py          # Tight-Aggressive
 │   │   ├── lag_agent.py          # Loose-Aggressive
@@ -422,13 +500,20 @@ lisaloop-sdk/
 │   │   └── engine.py             # Arena, leaderboard, stats
 │   ├── analysis/                 # Analytics
 │   │   └── stats.py              # Match reports, H2H, Sharpe, drawdown
-│   ├── examples/                 # Example code
+│   ├── examples/                 # Examples
 │   │   ├── quickstart.py         # 10-line demo
 │   │   ├── my_first_agent.py     # Starter template
-│   │   ├── equity_demo.py        # Equity calculator walkthrough
-│   │   ├── strategy_demo.py      # Sizing + ICM + charts demo
-│   │   └── replay_demo.py        # Hand replay demo
+│   │   ├── runtime_demo.py       # Full framework lifecycle demo
+│   │   ├── training_demo.py      # Self-play training
+│   │   ├── plugin_example.py     # Custom plugin
+│   │   ├── equity_demo.py        # Equity calculator
+│   │   ├── strategy_demo.py      # Sizing + ICM + charts
+│   │   └── replay_demo.py        # Hand replay
 │   └── cli.py                    # Full CLI
+├── characters/                   # Character files (JSON agent profiles)
+│   ├── lisa.json                 # Lisa — adaptive exploitative
+│   ├── shark.json                # Tight-aggressive shark
+│   └── maniac.json               # Chaotic loose-aggressive
 ├── tests/
 ├── CONTRIBUTING.md
 ├── pyproject.toml

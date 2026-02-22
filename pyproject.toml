@@ -4,7 +4,7 @@ build-backend = "setuptools.backends._legacy:_Backend"
 
 [project]
 name = "lisaloop"
-version = "0.2.0"
+version = "0.3.0"
 description = "The open framework for building on Lisa Loop — poker agents, equity calculators, strategy tools, and more."
 readme = "README.md"
 license = {text = "MIT"}

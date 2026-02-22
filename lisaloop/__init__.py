@@ -12,7 +12,7 @@ Usage:
     from lisaloop.replay import HandReplay
 """
 
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 from lisaloop.core.state import GameState, PlayerState, Action, ActionType, Street
 from lisaloop.core.cards import Card, Hand, Deck, HandRank, HandEvaluator

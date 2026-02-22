@@ -1,0 +1,32 @@
+{
+  "name": "Maniac",
+  "version": "1.0",
+  "author": "Community",
+  "description": "Chaotic loose-aggressive. Plays every hand. Maximum variance.",
+  "personality": "Unhinged. Loves action. Will 3-bet with 72o and show it.",
+  "style": "loose-aggressive",
+  "strategy": {
+    "aggression": 0.95,
+    "bluff_frequency": 0.45,
+    "tightness": 0.30,
+    "position_awareness": 0.3,
+    "opponent_adaptation": false
+  },
+  "preflop": {
+    "open_range_pct": 55,
+    "three_bet_range_pct": 18,
+    "cold_call_range_pct": 20
+  },
+  "postflop": {
+    "cbet_frequency": 0.85,
+    "check_raise_frequency": 0.15,
+    "float_frequency": 0.25,
+    "value_to_bluff_ratio": 0.8
+  },
+  "bio": [
+    "Plays every hand. Raises every pot. Lives for the action."
+  ],
+  "lore": [
+    "Variance is just the universe paying you back with interest."
+  ]
+}

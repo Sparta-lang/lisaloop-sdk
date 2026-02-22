@@ -1,0 +1,32 @@
+{
+  "name": "Shark",
+  "version": "1.0",
+  "author": "Community",
+  "description": "Tight-aggressive shark. Premium hands, big bets, no mercy.",
+  "personality": "Cold. Disciplined. Only enters pots with premium holdings. Punishes weakness.",
+  "style": "tight-aggressive",
+  "strategy": {
+    "aggression": 0.85,
+    "bluff_frequency": 0.10,
+    "tightness": 0.85,
+    "position_awareness": 0.8,
+    "opponent_adaptation": false
+  },
+  "preflop": {
+    "open_range_pct": 16,
+    "three_bet_range_pct": 6,
+    "cold_call_range_pct": 5
+  },
+  "postflop": {
+    "cbet_frequency": 0.75,
+    "check_raise_frequency": 0.05,
+    "float_frequency": 0.05,
+    "value_to_bluff_ratio": 3.0
+  },
+  "bio": [
+    "Old-school TAG. Plays premium hands and punishes loose players."
+  ],
+  "lore": [
+    "The shark doesn't chase. The shark waits."
+  ]
+}
