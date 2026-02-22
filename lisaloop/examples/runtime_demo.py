@@ -13,8 +13,8 @@ from lisaloop.agents import LisaAgent, TAGAgent
 
 def main():
     # ── Create Runtime ───────────────────────────────
-    print("\n  ── Lisa Loop Framework Demo ──")
-    print("  " + "═" * 50)
+    print("\n  -- Lisa Loop Framework Demo --")
+    print("  " + "=" * 50)
 
     runtime = AgentRuntime(RuntimeConfig(
         name="demo-session",

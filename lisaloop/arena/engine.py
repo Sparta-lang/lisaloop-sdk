@@ -15,6 +15,7 @@ Usage:
 
 from __future__ import annotations
 
+import io
 import logging
 import sys
 import time
@@ -278,7 +279,7 @@ class Arena:
         out.write(f"Leader: {leader.name} (+${leader.total_profit:.2f}) | Last: {trailer.name} (${trailer.total_profit:.2f})")
         out.flush()
 
-    def _print_final(self, out: TextIO) -> None:
+    def _print_final(self, out: TextIO, duration: float = 0.0) -> None:
         out.write("\n\n")
         out.write("╔══════════════════════════════════════════════════════════════════════════════╗\n")
         out.write("║                              FINAL RESULTS                                 ║\n")

@@ -14,6 +14,15 @@ Usage:
 
 __version__ = "0.3.0"
 
+# Fix Windows console encoding for box-drawing characters
+import sys as _sys
+if _sys.platform == 'win32' and hasattr(_sys.stdout, 'reconfigure'):
+    try:
+        _sys.stdout.reconfigure(encoding='utf-8')
+        _sys.stderr.reconfigure(encoding='utf-8')
+    except Exception:
+        pass
+
 from lisaloop.core.state import GameState, PlayerState, Action, ActionType, Street
 from lisaloop.core.cards import Card, Hand, Deck, HandRank, HandEvaluator
 from lisaloop.core.table import Table, TableConfig, Blind
