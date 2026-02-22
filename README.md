@@ -1,9 +1,9 @@
 <p align="center">
-  <img src="https://cdn.prod.website-files.com/69082c5061a39922df8ed3b6/698df76ef79a24dbf4f1a745_New%20Project%20-%202026-02-12T155316.269.png" alt="Lisa Loop Banner" width="100%" />
+  <img src="https://cdn.prod.website-files.com/69082c5061a39922df8ed3b6/6995208684b51f80dfb971fa_New%20Project%20-%202026-02-18T005623.215.png" alt="Lisa Loop Banner" width="100%" />
 </p>
 
 <p align="center">
-  <img src="https://cdn.prod.website-files.com/69082c5061a39922df8ed3b6/698de9d051aaed1a235ebf79_milton.png" alt="Lisa" width="120" style="border-radius:50%" />
+  <img src="https://cdn.prod.website-files.com/69082c5061a39922df8ed3b6/699b43bac4d0619656d4811f_New%20Project%20-%202026-02-18T022623.000.png" alt="Lisa" width="120" style="border-radius:50%" />
 </p>
 
 <h1 align="center">Lisa Loop SDK</h1>
