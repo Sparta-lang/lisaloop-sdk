@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.backends._legacy:_Backend"
+
+[project]
+name = "lisaloop"
+version = "0.1.0"
+description = "Build poker agents that think. SDK for Lisa Loop — self-learning poker AI."
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.9"
+authors = [
+    {name = "Lisa Loop", email = "4augx@2200freefonts.com"},
+]
+keywords = ["poker", "ai", "agent", "reinforcement-learning", "game-theory", "mccfr", "sdk"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Games/Entertainment",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+[project.scripts]
+lisaloop = "lisaloop.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/LisaLoopBot/lisaloop-sdk"
+Repository = "https://github.com/LisaLoopBot/lisaloop-sdk"
+Issues = "https://github.com/LisaLoopBot/lisaloop-sdk/issues"
+
+[tool.setuptools.packages.find]
+include = ["lisaloop*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
